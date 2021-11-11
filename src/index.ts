@@ -11,7 +11,7 @@ export function getMicroSplits(text: string, limitLength: number, separator: str
         return getMicroSplits(t, limitLength, getNextSeparator(separator))
       }
 
-      return t + separator
+      return (t + separator).replace('..', '.')
     })
   )
 
@@ -54,6 +54,7 @@ export function getSplittedTexts(text: string, limitLength: number): string[] {
 export function getNextSeparator(separator: string) {
   switch (separator) {
     case '.':
+    case '. ':
       return '!'
 
     case '!':
