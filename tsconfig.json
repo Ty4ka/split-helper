@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
     "outDir": "./lib",
-    "target": "ES2020",
-    "module": "ES2020",
+    "target": "esnext",
+    "module": "esnext",
     "moduleResolution": "Node",
     "jsx": "react-jsx",
     "allowJs": true,
