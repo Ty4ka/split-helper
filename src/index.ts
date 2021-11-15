@@ -11,8 +11,10 @@ export function getMicroSplits(text: string, limitLength: number, separator: str
         return getMicroSplits(t, limitLength, getNextSeparator(separator))
       }
 
-      return (t + separator).replace('..', '.')
+      return t + separator
     })
+  ).map((x) =>
+    x.replaceAll('..', '.').replaceAll(':.', ':').replaceAll('!.', '!').replaceAll('?.', '?').replaceAll(';.', ';')
   )
 
   // TODO: if startsWith lowercase - union with previos item
@@ -21,7 +23,7 @@ export function getMicroSplits(text: string, limitLength: number, separator: str
 }
 
 export function getSplittedTexts(text: string, limitLength: number): string[] {
-  const microSplits = getMicroSplits(text, limitLength, '.')
+  const microSplits = getMicroSplits(text, limitLength, '. ')
   const macroSplits: string[] = []
 
   let currentSplitIndex = 0
