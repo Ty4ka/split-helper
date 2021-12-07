@@ -65,8 +65,8 @@ export function getNextSeparator(separator: string) {
     case '?':
       return ';'
 
-    case ';':
-      return ':'
+    // case ';':
+    //   return ':'
   }
 
   return null
