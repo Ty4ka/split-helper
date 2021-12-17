@@ -1,5 +1,16 @@
 import _ from 'lodash'
 
+export function splitNormalize(text: string) {
+  text = text || ''
+  const fixEls = ['  ', '..', '. .', '. ...']
+
+  while (fixEls.some((fe) => text.includes(fe))) {
+    text = text.replaceAll('  ', ' ').replaceAll('..', '.').replaceAll('. ...', '. ').replaceAll('. .', '. ')
+  }
+
+  return text.replaceAll(':.', ':').replaceAll('!.', '!').replaceAll('?.', '?').replaceAll(';.', ';')
+}
+
 export function getMicroSplits(text: string, limitLength: number, separator: string | null) {
   if (!separator) {
     return [text]
@@ -13,9 +24,7 @@ export function getMicroSplits(text: string, limitLength: number, separator: str
 
       return t + separator
     })
-  ).map((x) =>
-    x.replaceAll('..', '.').replaceAll(':.', ':').replaceAll('!.', '!').replaceAll('?.', '?').replaceAll(';.', ';')
-  )
+  ).map((x) => splitNormalize(x))
 
   // TODO: if startsWith lowercase - union with previos item
 
@@ -24,29 +33,33 @@ export function getMicroSplits(text: string, limitLength: number, separator: str
 
 export function getSplittedTexts(text: string, limitLength: number): string[] {
   const microSplits = getMicroSplits(text, limitLength, '. ')
+  return groupByLimit(microSplits, limitLength)
+}
+
+export function groupByLimit(splits: string[], limitLength: number) {
   const macroSplits: string[] = []
 
   let currentSplitIndex = 0
 
-  while (currentSplitIndex < microSplits.length) {
+  while (currentSplitIndex < splits.length) {
     let nextSplitIndex = currentSplitIndex + 1
 
     while (
-      microSplits.slice(currentSplitIndex, nextSplitIndex).join(' ').length < limitLength &&
-      nextSplitIndex < microSplits.length
+      splits.slice(currentSplitIndex, nextSplitIndex).join(' ').length < limitLength &&
+      nextSplitIndex < splits.length
     ) {
       nextSplitIndex++
     }
 
     const noLimit =
-      microSplits.slice(currentSplitIndex, currentSplitIndex + nextSplitIndex).join(' ').length < limitLength ||
+      splits.slice(currentSplitIndex, currentSplitIndex + nextSplitIndex).join(' ').length < limitLength ||
       nextSplitIndex - currentSplitIndex <= 1
 
     if (!noLimit) {
       nextSplitIndex--
     }
 
-    macroSplits.push(microSplits.slice(currentSplitIndex, nextSplitIndex).join(''))
+    macroSplits.push(splits.slice(currentSplitIndex, nextSplitIndex).join(''))
     currentSplitIndex = nextSplitIndex
   }
 
