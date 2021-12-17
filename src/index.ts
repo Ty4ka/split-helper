@@ -59,7 +59,7 @@ export function groupByLimit(splits: string[], limitLength: number) {
       nextSplitIndex--
     }
 
-    macroSplits.push(splits.slice(currentSplitIndex, nextSplitIndex).join(''))
+    macroSplits.push(splits.slice(currentSplitIndex, nextSplitIndex).join(' '))
     currentSplitIndex = nextSplitIndex
   }
 
