@@ -36,30 +36,29 @@ export function getSplittedTexts(text: string, limitLength: number): string[] {
   return groupByLimit(microSplits, limitLength)
 }
 
-export function groupByLimit(splits: string[], limitLength: number) {
+export function groupByLimit(splits: string[], limitLength: number, joiner = ' ') {
   const macroSplits: string[] = []
-
   let currentSplitIndex = 0
 
   while (currentSplitIndex < splits.length) {
     let nextSplitIndex = currentSplitIndex + 1
 
     while (
-      splits.slice(currentSplitIndex, nextSplitIndex).join(' ').length < limitLength &&
+      splits.slice(currentSplitIndex, nextSplitIndex).join(joiner).length < limitLength &&
       nextSplitIndex < splits.length
     ) {
       nextSplitIndex++
     }
 
     const noLimit =
-      splits.slice(currentSplitIndex, currentSplitIndex + nextSplitIndex).join(' ').length < limitLength ||
+      splits.slice(currentSplitIndex, currentSplitIndex + nextSplitIndex).join(joiner).length < limitLength ||
       nextSplitIndex - currentSplitIndex <= 1
 
     if (!noLimit) {
       nextSplitIndex--
     }
 
-    macroSplits.push(splits.slice(currentSplitIndex, nextSplitIndex).join(' '))
+    macroSplits.push(splits.slice(currentSplitIndex, nextSplitIndex).join(joiner))
     currentSplitIndex = nextSplitIndex
   }
 
