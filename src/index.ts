@@ -5,10 +5,40 @@ export function splitNormalize(text: string) {
   const fixEls = ['  ', '..', '. .', '. ...']
 
   while (fixEls.some((fe) => text.includes(fe))) {
-    text = text.replaceAll('  ', ' ').replaceAll('..', '.').replaceAll('. ...', '. ').replaceAll('. .', '. ')
+    text = text
+      .replaceAll('  ', ' ')
+      .replaceAll('..', '.')
+      .replaceAll('. ...', '. ')
+      .replaceAll('. .', '. ')
+
+      // additional
+      .replaceAll(':.', ':')
+      .replaceAll('!.', '!')
+      .replaceAll('?.', '?')
+      .replaceAll(';.', ';')
   }
 
-  return text.replaceAll(':.', ':').replaceAll('!.', '!').replaceAll('?.', '?').replaceAll(';.', ';')
+  return pointSpaceNormalize(text)
+}
+
+export function pointSpaceNormalize(text: string) {
+  let position = 0
+  const point = '.'
+
+  while (position > -1 && position < text.length) {
+    const nextPosition = position + 1
+    const nextChar = text[nextPosition]
+    const isLetter = nextChar?.toUpperCase() !== nextChar?.toLowerCase()
+    const isUpper = nextChar === nextChar?.toUpperCase()
+
+    if (isLetter && isUpper) {
+      text = text.substring(0, nextPosition) + ' ' + text.substring(nextPosition, text.length)
+    }
+
+    position = text.indexOf(point, nextPosition + 1)
+  }
+
+  return text
 }
 
 export function getMicroSplits(text: string, limitLength: number, separator: string | null) {
