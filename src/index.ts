@@ -62,6 +62,10 @@ export function getMicroSplits(text: string, limitLength: number, separator: str
 }
 
 export function getSplittedTexts(text: string, limitLength: number): string[] {
+  if (text.length <= limitLength) {
+    return [text]
+  }
+
   const microSplits = getMicroSplits(text, limitLength, '. ')
   return groupByLimit(microSplits, limitLength)
 }
